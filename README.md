@@ -1,2 +1,2 @@
 # whatAmITalkingAbout
-uses meta-info to count topic frequencies
+Use meta-info to count topic frequencies over user specified time.
