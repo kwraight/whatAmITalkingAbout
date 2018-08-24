@@ -1,10 +1,12 @@
 ### glean information from twitter and make plot
 import tweepy
-from datetime import datetime, date, time
+from datetime import datetime, date, timedelta
 import time
 import matplotlib.pyplot as plt
 import numpy as np
 import argumentClass
+import random
+import sys
 sys.path.insert(0, '../configs/')
 import configSettings_ao
 
@@ -98,7 +100,7 @@ def GleanTwitter(argDict):
     print "highest instance:", max(topics, key=lambda x:x['num'])
     return topics
 
-def PlotFreq(topArr):
+def PlotFreq(topArr, show=True, saveName="NYS"):
 
     prop_cycle = plt.rcParams['axes.prop_cycle']
     colors = prop_cycle.by_key()['color']
@@ -113,11 +115,18 @@ def PlotFreq(topArr):
     ax.set_xticklabels([t['name']+"("+t['type']+")" for t in topArr],rotation = 45, ha="right")
     ax.set_ylim([0, max([t['num'] for t in topArr])*1.05])
     ax.set_ylabel('frequency')
-    ax.set_title('topic frequency from '+str(len(topArr))+' tweets')
+    ax.set_title('topic frequency from '+str(sum([t['num'] for t in topArr]))+' tweets')
     plt.tight_layout()
     #plt.subplots_adjust(top=0.95, bottom=0.05, left=0.05, right=0.95, hspace=0.40, wspace=0.409) # plots layout
+    if show==True:
+        plt.show()
+    else:
+        if "NYS" in saveName:
+            saveName="whatName_"+datetime.now().strftime("%Y-%m-%d")+"_"+str(random.uniform(1,100))+".png"
+        print "analytics: saving (not showing)",saveName
+        plt.savefig(saveName)
 
-    plt.show()
+    return saveName
 
 ###############################
 ### EXECUTE
@@ -125,7 +134,6 @@ def PlotFreq(topArr):
 
 def main():
     print ">>>analytics running..."
-
 
     args = argumentClass.GetArgs()
     

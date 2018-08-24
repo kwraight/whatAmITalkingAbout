@@ -1,14 +1,18 @@
 #basic schedule job to use summaryInfo to summarise data, delete data and tweet summary plot
 
-import time
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 import os
 import io
+import analytics
+from datetime import datetime, date, timedelta
+import time
+import random
 import sys
 sys.path.insert(0, '../configs/')
 import configSettings_ao as configSettings
+
 
 
 start_time = time.time() #grabs the system time
@@ -20,13 +24,25 @@ def tweet_image(filename, message):
     api.update_with_media(filename, status=message)
     return
 
+def WAITA(who,options):
+    print ">>> listener:WAITA: inside:",who
+    argDict={'who':who, 'start':(datetime.now() - timedelta(1)), 'end':datetime.now(), 'pages':"-1", 'topics':"nhs"}
+    print ">>> listener:WAITA: argDict:",argDict
+    topArr=analytics.GleanTwitter(argDict)
+    print ">>> listener:WAITA: topArr:",len(topArr)
+    plotName=analytics.PlotFreq(topArr,False,"plots/"+who+"_"+datetime.now().strftime("%Y-%m-%d")+"_"+str(random.uniform(1,100))+".png")
+    print ">>> listener:WAITA: plotName:",plotName
+    return plotName
+
 
 def TextCommand(txt, who="OracleAuto"):
 
     for t in txt.split(' '):
-        if "this" in t:
-            print "in this"
-            tweet_image("hydrogen.jpg","@people_didnae it's elemental")
+        if "WAITA" in t or "waita" in t:
+            print ">>> listener:TextCommand: processing talk"
+            plotName=WAITA(who,t[t.find('(')+1:t.find(')')])
+            print ">>> listener:TextCommand: file to tweet:",plotName
+            tweet_image(plotName,"@"+who+" this is what you're talking about...")
         elif "that" in t:
             print "in that"
             tweet_image("helium.jpg","@"+who+" it's elemental")
@@ -79,8 +95,7 @@ class listener(StreamListener):
         '''
 
     def on_error(self, status):
-    
-        print statuses
+        print status
 
 
 auth = OAuthHandler(configSettings.cfg['consumer_key'], configSettings.cfg['consumer_secret']) #OAuth object
