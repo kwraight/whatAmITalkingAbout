@@ -2,10 +2,11 @@
 import tweepy
 from datetime import datetime, date, time
 import time
-import ../configs/configSettings_ao
 import matplotlib.pyplot as plt
 import numpy as np
 import argumentClass
+sys.path.insert(0, '../configs/')
+import configSettings_ao
 
 
 ###############################
