@@ -55,7 +55,7 @@ def GleanTwitter(argDict):
     api=configSettings_ao.get_api()
     print "\n%%% time check: "+str(datetime.now())
     # get posts
-    pageNum=0 #loop over pages
+    pageNum=1 #loop over pages
     pageLim=argumentClass.Str2Int(argDict['pages'],"pageLimit")
     count=0
 
