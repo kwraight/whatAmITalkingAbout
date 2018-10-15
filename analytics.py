@@ -2,7 +2,10 @@
 import tweepy
 from datetime import datetime, date, timedelta
 import time
+import matplotlib
+matplotlib.use("Pdf")
 import matplotlib.pyplot as plt
+#matplotlib.use('Agg')
 import numpy as np
 import argumentClass
 import random
